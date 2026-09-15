@@ -1,0 +1,222 @@
+/* style.css - UFO-TW Controller */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { height: 100%; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #1a1a2e;
+  color: #e0e0e0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ---------- Toolbar ---------- */
+#toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #16213e;
+  border-bottom: 1px solid #0f3460;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+#toolbar button {
+  padding: 6px 12px;
+  border: 1px solid #0f3460;
+  border-radius: 4px;
+  background: #1a1a2e;
+  color: #e0e0e0;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+}
+#toolbar button:hover { background: #0f3460; }
+#toolbar button.flip-on { background: #533483; border-color: #533483; }
+.badge {
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  background: #333;
+  white-space: nowrap;
+}
+.badge.on { background: #0f6b3a; }
+
+#btnSidebar { display: none; }
+#sidebarBackdrop { display: none; }
+
+/* ---------- Layout ---------- */
+#layout {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+#sidebar {
+  width: 260px;
+  border-right: 1px solid #0f3460;
+  overflow-y: auto;
+  background: #16213e;
+  flex-shrink: 0;
+}
+#main {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ---------- Playlist ---------- */
+#playlist { padding: 4px 0; }
+.pl-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 13px;
+  border-bottom: 1px solid #0f3460;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pl-item:hover { background: #1a1a2e; }
+.pl-item.active { background: #0f3460; color: #fff; }
+
+/* ---------- Player ---------- */
+#playerBox {
+  flex: 1 1 0;
+  min-height: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+#player {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+#placeholder { color: #555; font-size: 16px; text-align: center; padding: 20px; }
+
+/* ---------- 字幕显示 ---------- */
+/* 关键：bottom 抬高到 90px，避开视频原生进度条（一般 40~60px 高） */
+#subDisplay {
+  position: absolute;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-shadow:
+    0 0 4px #000,
+    1px 1px 2px #000,
+    -1px -1px 2px #000,
+    1px -1px 2px #000,
+    -1px 1px 2px #000;
+  padding: 6px 18px;
+  border-radius: 4px;
+  background: rgba(0,0,0,0.55);
+  max-width: 88%;
+  text-align: center;
+  pointer-events: none;
+  display: none;
+  z-index: 5;
+  white-space: pre-line; /* 支持多行字幕 */
+}
+
+/* ---------- Status Bar ---------- */
+#statusBar {
+  padding: 8px 12px;
+  background: #16213e;
+  border-top: 1px solid #0f3460;
+  flex-shrink: 0;
+}
+#waveWrap {
+  position: relative;
+  height: 50px;
+  min-height: 50px;
+  background: #111;
+  border-radius: 3px;
+  margin-bottom: 6px;
+  overflow: hidden;
+}
+#waveCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+#wavePos {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: #e0e0e0;
+  pointer-events: none;
+}
+#timeText {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 2px;
+}
+#actionText {
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* ---------- 移动端适配 ---------- */
+@media (max-width: 700px) {
+  #btnSidebar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    padding: 4px 10px;
+  }
+  #sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 80vw;
+    max-width: 320px;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: 4px 0 16px rgba(0,0,0,0.6);
+  }
+  #sidebar.open { transform: translateX(0); }
+
+  #sidebarBackdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 199;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  #sidebarBackdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  #statusBar { padding: 6px 10px; }
+  #waveWrap { height: 40px; min-height: 40px; }
+
+  /* 移动端控制条更高，字幕再往上抬一些 */
+  #subDisplay {
+    bottom: 80px;
+    font-size: 24px;
+    max-width: 92%;
+    padding: 5px 14px;
+  }
+}
